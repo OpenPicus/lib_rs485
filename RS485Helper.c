@@ -242,3 +242,4 @@ void RS485WriteCh(int port, char chr)
 
 #endif //__RS485_HELPER_LIB_C
 
+//prova
