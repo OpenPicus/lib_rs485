@@ -1,3 +1,7 @@
+/** \file RS485Helper.c
+ *  \brief RS485 communication library
+ */
+
 /* **************************************************************************                                                                                                                                                                   
  *                                OpenPicus                 www.openpicus.com
  *                                                            italian concept
@@ -45,6 +49,15 @@
  * (INCLUDING NEGLIGENCE), BREACH OF WARRANTY, OR OTHERWISE.
  *
  **************************************************************************/
+ 
+ /**
+\defgroup RS485
+@{
+
+The RS485 library contains all the command to manage the RS485 communication.
+*/
+
+/// @cond debug
 #ifndef __RS485_HELPER_LIB_C
 #define __RS485_HELPER_LIB_C
 
@@ -63,6 +76,8 @@ static int rEnPin[4] = {0,0,0,0};
 
 unsigned int RS485Delay = 10;
 char lclmsg[100];
+/// @endcond
+
 /**
  * RS485Remap - Remap the provided FLYPORT pins to be used as RS485 serial.
  * \param port - the UART port to initialize. 
@@ -70,7 +85,6 @@ char lclmsg[100];
  * \param RXPin - the pin used as RX signal.
  * \param writeEnPin - the pin used as Write Enable signal.
  * \param readEnPin - the pin used as Read Enable signal.
- * \return None
  */
 void RS485Remap(int port, int TXPin, int RXPin, int writeEnPin, int readEnPin)
 {
@@ -110,12 +124,9 @@ void RS485Remap(int port, int TXPin, int RXPin, int writeEnPin, int readEnPin)
 }
 
  /**
- * RS485Init - Initializes the specified uart port with the specified baud rate to be used as RS485 serial.
- * \param port - the UART port to initialize. 
- * \param baud - the desired baudrate.
- * \param writeEnPin - the pin used as Write Enable signal
- * \param readEnPin - the pin used as Read Enable signal
- * \return None
+ * RS485Init - Function to initialize the speed of RS485.
+ * \param port - UART port number. 
+ * \param baud - value of desired baudrate.
  */
 void RS485Init(int port,long int baud)
 {
@@ -130,6 +141,13 @@ void RS485Init(int port,long int baud)
 		_dbgwrite(lclmsg);
 }
 
+ /**
+ * RS485SetParam - Function to setup RS485 parameters.
+ * \param port - the UART port to initialize. 
+ * \param param - parameter to set: RS485_STOP_BITS and RS485_DATA_PARITY
+ * \param value - values to set stop bits, data bits and parity
+ */
+ 
 void RS485SetParam(int port, int param, int value)
 {
         port--;
@@ -172,6 +190,10 @@ void RS485SetParam(int port, int param, int value)
         }
 }
 
+/**
+ * RS485On - Function to turn on the UART of RS485.
+ * \param port - UART port number. 
+ */
 void RS485On(int port)
 {
 	vTaskSuspendAll();
@@ -179,6 +201,10 @@ void RS485On(int port)
 	xTaskResumeAll();
 }
 
+/**
+ * RS485Off - Function to turn off the UART of RS485.
+ * \param port - UART port number. 
+ */
 void RS485Off(int port)
 {
 	vTaskSuspendAll();
@@ -186,6 +212,10 @@ void RS485Off(int port)
 	xTaskResumeAll();
 }
 
+/**
+ * RS485Flush - Function to flush the RS485 receive buffer.
+ * \param port - UART port number. 
+ */
 void RS485Flush(int port)
 {
 	vTaskSuspendAll();
@@ -193,6 +223,11 @@ void RS485Flush(int port)
 	xTaskResumeAll();
 }
 
+/**
+ * RS485BufferSize - Function returns the size of the receive buffer of the selected RS485.
+ * \param port - UART port number. 
+ * \return - how many chars are available to read.
+ */
 int RS485BufferSize(int port)
 {
 	vTaskSuspendAll();
@@ -201,6 +236,11 @@ int RS485BufferSize(int port)
 	return len;
 }
 
+/**
+ * RS485Write - Function to write chars to RS485.
+ * \param port - UART port number. 
+ * \param buffer - char array buffer (with terminator character) of data to write.
+ */
 void RS485Write(int port, char *buffer)
 {
 	vTaskSuspendAll();
@@ -219,6 +259,13 @@ void RS485Write(int port, char *buffer)
 	xTaskResumeAll();
 }
 
+/**
+ * RS485Read - Function to read from RS485 receive buffer.
+ * \param port - UART port number. 
+ * \param towrite - char array buffer to store data. 
+ * \param value - how many chars to read from the buffer.
+ * \return - how many chars were successfully read.
+ */
 int RS485Read (int port , char *towrite , int count)
 {
 	vTaskSuspendAll();
@@ -227,6 +274,11 @@ int RS485Read (int port , char *towrite , int count)
 	return len;
 }
 
+/**
+ * RS485WriteCh - Function to write a single char to RS485.
+ * \param port - UART port number. 
+ * \param chr - char to write.
+ */
 void RS485WriteCh(int port, char chr)
 {
 	vTaskSuspendAll();
@@ -240,6 +292,12 @@ void RS485WriteCh(int port, char chr)
 	xTaskResumeAll();
 }
 
+/**
+ * RS485WriteChs - Function to write a char array to RS485.
+ * \param port - UART port number. 
+ * \param buffer - data to be sent.
+ * \param len - the buffer length
+ */
 void RS485WriteChs(int port, char *buffer, int len)
 {
 	vTaskSuspendAll();
