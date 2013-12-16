@@ -240,4 +240,28 @@ void RS485WriteCh(int port, char chr)
 	xTaskResumeAll();
 }
 
+void RS485WriteChs(int port, char *buffer, int len)
+{
+	vTaskSuspendAll();
+		Delay10us(RS485Delay);
+        IOPut((int)wEnPin[port-1], on);
+        IOPut((int)rEnPin[port-1], on);
+        //vTaskDelay(1);
+		Delay10us(10);
+
+        int i=0;
+        for(i=0;i<len;i++)
+        {
+            UARTWriteCh(port, buffer[i]);
+        }
+           // UARTWriteCh(port, '\n');
+        Delay10us(RS485Delay);
+		// Added Flush to prevent Framing Errors on low baud rates
+		UARTFlush(port);
+        //vTaskDelay(1);
+        IOPut((int)wEnPin[port-1], off);
+        IOPut((int)rEnPin[port-1], off);
+	xTaskResumeAll();
+}
+
 #endif //__RS485_HELPER_LIB_C
